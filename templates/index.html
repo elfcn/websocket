@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <title>Flask-SocketIO Chat</title>
+    <script src="{{ url_for('static',filename='js/jquery-3.6.4.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/socket.io.js') }}"></script>
+</head>
+<body>
+<h1>Flask-SocketIO Chat</h1>
+<div id="messages"></div>
+<input id="message_input" type="text">
+<button id="send_button">Send</button>
+<script type="text/javascript">
+    var url = 'http://' + document.domain + ':' + location.port
+    console.log(url)
+    var socket = io.connect(url);
+    socket.on('message', function (data) {
+        $('#messages').append('<p>' + data + '</p>');
+    });
+    socket.on("connect", () => {
+        const transport = socket.io.engine.transport.name; // 在大多数情况下, "polling"
+        console.log("transport=" + transport)
+        socket.io.engine.on("upgrade", () => {
+            const upgradedTransport = socket.io.engine.transport.name; // 在大多数情况下, "websocket"
+            console.log("upgradedTransport=" + upgradedTransport)
+        });
+
+    });
+    $('#send_button').on('click', function () {
+        var message = $('#message_input').val();
+        socket.send(message);
+        $('#message_input').val('');
+    });
+</script>
+</body>
+</html>
