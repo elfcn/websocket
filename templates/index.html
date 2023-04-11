@@ -11,7 +11,7 @@
 <input id="message_input" type="text">
 <button id="send_button">Send</button>
 <script type="text/javascript">
-    var url = 'http://' + document.domain + ':' + location.port
+    var url = 'https://' + document.domain + ':' + location.port
     console.log(url)
     var socket = io.connect(url);
     socket.on('message', function (data) {
